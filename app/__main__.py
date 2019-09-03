@@ -13,8 +13,17 @@ def job_update_department(state_id, department_type):
     """Update department professors"""
     # last_professor = get_last_professor(state_id, department_type)
     professors = get_professors(state_id, department_type, None)
-    print(professors)
+    print_professors(professors)
     # save_professors(state_id, department_type, professors)
+
+def print_professors(professors):
+    """Print professors"""
+    for professor in professors:
+        print('{:30} {:2} {:>25}'.format(
+            professor['name'],
+            professor['points'],
+            professor['date'].strftime('%d %B %Y %H:%M'),
+        ))
 
 
 if __name__ == '__main__':

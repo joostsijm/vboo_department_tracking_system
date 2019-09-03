@@ -1,6 +1,7 @@
 """API module"""
 
-import re 
+import re
+from datetime import datetime, timedelta
 
 import requests
 from bs4 import BeautifulSoup
@@ -43,19 +44,21 @@ def parse_department(html):
     """Parse html return professors"""
     soup = BeautifulSoup(html, 'html.parser')
     professors_tree = soup.find_all(class_='list_link')
-    print(professors_tree)
     professors = []
+    today = datetime.strftime(datetime.now(), '%-d %B %Y')
+    yesterday = datetime.strftime(datetime.now() - timedelta(1), '%-d %B %Y')
     for professor_tree in professors_tree:
-        print(professor_tree)
         columns = professor_tree.find_all('td')
+        date = columns[3].string
+        date = date.replace('Today ', today)
+        date = date.replace('Yesterday ', yesterday)
+        datetime.strptime('Jun 1 2005  1:33PM', '%b %d %Y %I:%M%p')
         professors.append(
             {
                 'id': int(professor_tree['user']),
                 'name': re.sub(r'\s\(.*$', '', columns[1].string),
                 'points': int(re.sub(r'^.*\(\+|\)$', '', columns[1].string)),
-                'date': columns[3].string,
+                'date': datetime.strptime(date, '%d %B %Y %H:%M'),
             }
         )
-    print(professors)
-    exit()
     return professors
