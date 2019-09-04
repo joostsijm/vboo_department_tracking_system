@@ -14,17 +14,20 @@ def get_professors(state_id, department_type, start_date):
     not_reached_date = True
     page = 0
     while not_reached_date:
-        # tmp_professors = download_department(state_id, department_type, page)
-        tmp_professors = read_department()
+        tmp_professors = download_department(state_id, department_type, page)
+        if not tmp_professors:
+            not_reached_date = False
+            break
+        # tmp_professors = read_department()
         for professor in tmp_professors:
-            if start_date is not None: # and start_date >=:
+            if start_date is not None and professor['date_time'] <= start_date:
                 not_reached_date = False
                 break
             professors.append(professor)
 
         page += 1
-        break
 
+    professors.reverse()
     return professors
 
 def download_department(state_id, department_type, page):
@@ -53,12 +56,10 @@ def parse_department(html):
         date = date.replace('Today ', today)
         date = date.replace('Yesterday ', yesterday)
         datetime.strptime('Jun 1 2005  1:33PM', '%b %d %Y %I:%M%p')
-        professors.append(
-            {
-                'id': int(professor_tree['user']),
-                'name': re.sub(r'\s\(.*$', '', columns[1].string),
-                'points': int(re.sub(r'^.*\(\+|\)$', '', columns[1].string)),
-                'date': datetime.strptime(date, '%d %B %Y %H:%M'),
-            }
-        )
+        professors.append({
+            'id': int(re.sub(r'^.*\/', '', columns[1]['action'])),
+            'name': re.sub(r'\s\(.*$', '', columns[1].string),
+            'points': int(re.sub(r'^.*\(\+|\)$', '', columns[1].string)),
+            'date_time': datetime.strptime(date, '%d %B %Y %H:%M'),
+        })
     return professors
