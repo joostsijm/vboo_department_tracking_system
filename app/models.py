@@ -1,6 +1,6 @@
 """Database models"""
 
-from sqlalchemy import MetaData, Column, ForeignKey, Integer, String, SmallInteger, DateTime
+from sqlalchemy import MetaData, Column, ForeignKey, Integer, String, SmallInteger, DateTime, BigInteger
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -18,7 +18,7 @@ Base = declarative_base(metadata=meta)
 class Player(Base):
     """Model for player"""
     __tablename__ = 'player'
-    id = Column(Integer, primary_key=True)
+    id = Column(BigInteger, primary_key=True)
     name = Column(String)
     nation = Column(String)
 
@@ -51,7 +51,7 @@ class DepartmentStat(Base):
     date_time = Column(DateTime)
     points = Column(SmallInteger)
 
-    player_id = Column(Integer, ForeignKey('player.id'))
+    player_id = Column(BigInteger, ForeignKey('player.id'))
     player = relationship(
         'Player',
         backref=backref('department_stats', lazy='dynamic')
@@ -60,5 +60,5 @@ class DepartmentStat(Base):
     department_id = Column(Integer, ForeignKey('department.id'))
     department = relationship(
         'Department',
-        backref=backref('stats', lazy='dynamic')
+        backref=backref('department_stats', lazy='dynamic')
     )
