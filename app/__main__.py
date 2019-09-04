@@ -42,19 +42,19 @@ if __name__ == '__main__':
     # job_update_department(2788, 6)
     # VN
     # uranium
-    job_update_department(2788, 6)
+    add_update_department(2788, 6)
     # gold
-    job_update_department(2788, 2)
+    add_update_department(2788, 2)
     # construction
-    job_update_department(2788, 1)
+    add_update_department(2788, 1)
     # oil
-    job_update_department(2788, 3)
+    add_update_department(2788, 3)
     # Belgium
     # gold
-    job_update_department(2604, 2)
+    add_update_department(2604, 2)
     # De Provincien
     # gold
-    job_update_department(2620, 2)
+    add_update_department(2620, 2)
 
     try:
         while True:
