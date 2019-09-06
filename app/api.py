@@ -55,7 +55,6 @@ def parse_department(html):
         date = columns[3].string
         date = date.replace('Today ', today)
         date = date.replace('Yesterday ', yesterday)
-        datetime.strptime('Jun 1 2005  1:33PM', '%b %d %Y %I:%M%p')
         professors.append({
             'id': int(re.sub(r'^.*\/', '', columns[1]['action'])),
             'name': re.sub(r'\s\(.*$', '', columns[1].string),
