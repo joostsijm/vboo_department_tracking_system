@@ -45,7 +45,7 @@ def add_update_department(state_id, department_type):
 
 if __name__ == '__main__':
     # jobs
-    job_update_department(2788, 2)
+    # job_update_department(2788, 2)
     # VN
     # uranium
     add_update_department(2788, 6)
