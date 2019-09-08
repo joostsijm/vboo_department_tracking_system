@@ -2,20 +2,26 @@
 
 import time
 
-from app import scheduler, session
+from app import scheduler, LOGGER
 from app.api import get_professors
 from app.database import get_latest_professor, save_professors
 
 
 def job_update_department(state_id, department_type):
     """Update department professors"""
+    LOGGER.info('"%s": Run update for "%s" department for state', state_id, department_type)
     latest_professor = get_latest_professor(state_id, department_type)
     date = None
     if latest_professor:
         date = latest_professor.date_time
     professors = get_professors(state_id, department_type, date)
-    print_professors(professors)
+    LOGGER.info(
+        '"%s": Found "%s" new professors in "%s" department',
+        state_id, len(professors), department_type
+    )
+    # print_professors(professors)
     save_professors(state_id, department_type, professors)
+    LOGGER.info('"%s": saved professors', state_id)
 
 def print_professors(professors):
     """Print professors"""
@@ -39,7 +45,7 @@ def add_update_department(state_id, department_type):
 
 if __name__ == '__main__':
     # jobs
-    # job_update_department(2788, 6)
+    job_update_department(2788, 2)
     # VN
     # uranium
     add_update_department(2788, 6)
@@ -61,5 +67,4 @@ if __name__ == '__main__':
             time.sleep(100)
     except KeyboardInterrupt:
         print('Exiting application')
-        session.close()
         exit()
