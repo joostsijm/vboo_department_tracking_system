@@ -19,7 +19,8 @@ Session = sessionmaker(bind=engine)
 
 # scheduler
 scheduler = BackgroundScheduler(
-    job_defaults={'misfire_grace_time': 15*60},
+    daemon=True,
+    job_defaults={'misfire_grace_time': 10*60},
 )
 scheduler.start()
 

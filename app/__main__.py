@@ -121,4 +121,5 @@ if __name__ == '__main__':
             time.sleep(100)
     except KeyboardInterrupt:
         print('Exiting application')
+        scheduler.shutdown()
         exit()
