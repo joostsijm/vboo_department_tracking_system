@@ -65,9 +65,16 @@ def parse_department(html):
 
 def get_institutes():
     """Get all institutes"""
-    # institutes = download_institutes()
-    institutes = read_institutes()
-    return institutes
+    # return read_institutes()
+    return download_institutes()
+
+def download_institutes():
+    """Download the department"""
+    response = requests.get(
+        '{}listed/institutes'.format(BASE_URL),
+        headers=HEADERS
+    )
+    return parse_institutes(response.text)
 
 def read_institutes():
     """Read from department file"""

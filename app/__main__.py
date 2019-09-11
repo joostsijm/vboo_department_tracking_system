@@ -49,6 +49,7 @@ def job_send_progress_message(state_id, department_type, language):
     LOGGER.info('"%s": Send progress message for "%s" department', state_id, department_type)
     yesterday_professors = get_yesterday_professors(state_id, department_type)
     if not yesterday_professors:
+        LOGGER.warning('"%s": 0 professor yesterday in "%s" department', state_id, department_type)
         return
     yesterday_total = 0
     for professor in yesterday_professors:
