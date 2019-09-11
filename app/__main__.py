@@ -1,10 +1,11 @@
 """Main app"""
 
+import math
 import time
 
 from app import scheduler, LOGGER
-from app.api import get_professors
-from app.database import get_latest_professor, save_professors
+from app.api import get_professors, get_institutes, send_message
+from app.database import get_latest_professor, save_professors, get_yesterday_professors
 
 
 def job_update_department(state_id, department_type):
@@ -43,9 +44,59 @@ def add_update_department(state_id, department_type):
         hour='20'
     )
 
+def job_send_progress_message(state_id, department_type, language):
+    """Update department professors"""
+    LOGGER.info('"%s": Send progress message for "%s" department', state_id, department_type)
+    yesterday_professors = get_yesterday_professors(state_id, department_type)
+    if not yesterday_professors:
+        return
+    yesterday_total = 0
+    for professor in yesterday_professors:
+        yesterday_total += professor.points
+
+    institutes = get_institutes()
+    uranium_institutes = []
+    for institute in institutes:
+        if institute['department_type'] == department_type:
+            uranium_institutes.append(institute)
+            if institute['state_id'] == state_id:
+                state_institute = institute
+    top_department = uranium_institutes[0]
+    top_value = math.ceil(top_department['value'] / 10) * 10
+    points_per_day = round(top_value / 14)
+    message = ' '.join([
+        "Huidige uranium bonus is {} % met {} punten.".format(
+            state_institute['current_bonus'],
+            state_institute['value']
+        ),
+        "Benodigde punten voor 10 % bonus: {} wat dagelijks {} punten zijn.".format(
+            top_value,
+            points_per_day
+        ),
+        "Aantal punten gisteren was: {}, dat is {} % van de benodigde punten.".format(
+            yesterday_total,
+            round(100 / points_per_day * yesterday_total)
+        )
+    ])
+    print(message)
+    send_message(language, message)
+
+def add_send_progress_message(state_id, department_type, language):
+    """Add send_message"""
+    scheduler.add_job(
+        job_send_progress_message,
+        'cron',
+        args=[state_id, department_type, language],
+        id='send_message_{}_{}'.format(state_id, department_type),
+        replace_existing=True,
+        hour='20',
+        minute='10'
+    )
+
 if __name__ == '__main__':
     # jobs
-    # job_update_department(2788, 2)
+    # job_update_department(2788, 6)
+    # job_send_progress_message(2788, 6)
     # VN
     # uranium
     add_update_department(2788, 6)
@@ -61,6 +112,9 @@ if __name__ == '__main__':
     # De Provincien
     # gold
     add_update_department(2620, 2)
+
+    # send message
+    add_send_progress_message(2788, 6, 'nl')
 
     try:
         while True:

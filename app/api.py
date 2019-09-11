@@ -62,3 +62,40 @@ def parse_department(html):
             'date_time': datetime.strptime(date, '%d %B %Y %H:%M'),
         })
     return professors
+
+def get_institutes():
+    """Get all institutes"""
+    # institutes = download_institutes()
+    institutes = read_institutes()
+    return institutes
+
+def read_institutes():
+    """Read from department file"""
+    with open('institutes.html') as file:
+        return parse_institutes(file)
+
+def parse_institutes(html):
+    """Parse html to institute list"""
+    soup = BeautifulSoup(html, 'html.parser')
+    institutes_tree = soup.find_all(class_='list_link')
+    institutes = []
+    for institute_tree in institutes_tree:
+        department_type = int(re.sub(r'^.*\/', '', institute_tree.select('.results_date')[1]['action']))
+        value = int(institute_tree.select('.list_level')[0].string)
+        current_bonus = float(re.sub(r'\s%$', '', institute_tree.select('.list_level')[2].string))
+        if current_bonus >= 2:
+            institutes.append({
+                'state_id': int(institute_tree['user']),
+                'department_type': department_type,
+                'current_bonus': current_bonus,
+                'value': value,
+            })
+    return institutes
+
+def send_message(language, message):
+    """Send chat message"""
+    requests.post(
+        '{}send_chat/{}'.format(BASE_URL, language),
+        headers=HEADERS,
+        data={'message': message}
+    )

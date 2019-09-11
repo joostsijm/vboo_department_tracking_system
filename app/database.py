@@ -1,5 +1,7 @@
 """Database module"""
 
+from datetime import datetime, timedelta
+
 from app import Session
 from app.models import Player, Department, DepartmentStat
 
@@ -53,3 +55,16 @@ def save_professors(state_id, department_type, professors):
         session.add(department_stat)
     session.commit()
     session.close()
+
+def get_yesterday_professors(state_id, department_type):
+    """Get professors from yesterday"""
+    session = Session()
+    department = get_department(session, state_id, department_type)
+    until_date = datetime.today().replace(hour=20, minute=0, second=0)
+    from_date = until_date - timedelta(1)
+    professors = session.query(DepartmentStat) \
+        .filter(DepartmentStat.department_id == department.id) \
+        .filter(DepartmentStat.date_time >= from_date) \
+        .filter(DepartmentStat.date_time < until_date) \
+        .all()
+    return professors
