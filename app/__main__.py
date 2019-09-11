@@ -96,7 +96,7 @@ def add_send_progress_message(state_id, department_type, language):
 if __name__ == '__main__':
     # jobs
     # job_update_department(2788, 6)
-    # job_send_progress_message(2788, 6)
+    # job_send_progress_message(2788, 6, 'nl')
     # VN
     # uranium
     add_update_department(2788, 6)
