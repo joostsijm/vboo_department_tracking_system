@@ -110,6 +110,8 @@ if __name__ == '__main__':
     # Belgium
     # gold
     add_update_department(2604, 2)
+    # uranium
+    add_update_department(2604, 6)
     # De Provincien
     # gold
     add_update_department(2620, 2)
