@@ -65,19 +65,27 @@ def job_send_progress_message(state_id, department_type, language):
     top_department = uranium_institutes[0]
     top_value = math.ceil(top_department['value'] / 10) * 10
     points_per_day = round(top_value / 14)
-    message = ' '.join([
-        "Huidige uranium bonus is {} % met {} punten.".format(
-            state_institute['current_bonus'],
-            state_institute['value']
-        ),
-        "Benodigde punten voor 10 % bonus: {} wat dagelijks {} punten zijn.".format(
+    msg_current = "Huidige uranium bonus is {} % met {} punten.".format(
+        state_institute['current_bonus'],
+        state_institute['value']
+    )
+    if state_institute['current_bonus'] == 10:
+        msg_required = "Dagelijks zijn er {} punten nodig.".format(
+            points_per_day
+        )
+    else:
+        msg_required = "Benodigde punten voor 10 % bonus: {} wat dagelijks {} punten zijn.".format(
             top_value,
             points_per_day
-        ),
-        "Aantal punten gisteren was: {}, dat is {} % van de benodigde punten.".format(
-            yesterday_total,
-            round(100 / points_per_day * yesterday_total)
         )
+    msg_yesterday = "Aantal punten gisteren: {}, wat {} % van de benodigde aantal punten is.".format(
+        yesterday_total,
+        round(100 / points_per_day * yesterday_total)
+    )
+    message = ' '.join([
+        msg_current,
+        msg_required,
+        msg_yesterday
     ])
     print(message)
     send_message(language, message)
