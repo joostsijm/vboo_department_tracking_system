@@ -87,7 +87,8 @@ def parse_institutes(html):
     institutes_tree = soup.find_all(class_='list_link')
     institutes = []
     for institute_tree in institutes_tree:
-        department_type = int(re.sub(r'^.*\/', '', institute_tree.select('.results_date')[1]['action']))
+        department_type = \
+            int(re.sub(r'^.*\/', '', institute_tree.select('.results_date')[1]['action']))
         value = int(institute_tree.select('.list_level')[0].string)
         current_bonus = float(re.sub(r'\s%$', '', institute_tree.select('.list_level')[2].string))
         if current_bonus >= 2:

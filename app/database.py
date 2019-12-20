@@ -2,13 +2,13 @@
 
 from datetime import datetime, timedelta
 
-from app import Session
+from app import SESSION
 from app.models import Player, Department, DepartmentStat
 
 
 def get_latest_professor(state_id, department_type):
     """Get latest professor from database"""
-    session = Session()
+    session = SESSION()
     department = get_department(session, state_id, department_type)
     professor = department.department_stats.order_by(DepartmentStat.date_time.desc()).first()
     session.close()
@@ -42,7 +42,7 @@ def get_department(session, state_id, department_type):
 
 def save_professors(state_id, department_type, professors):
     """Save professors to database"""
-    session = Session()
+    session = SESSION()
     department = get_department(session, state_id, department_type)
 
     for professor in professors:
@@ -58,7 +58,7 @@ def save_professors(state_id, department_type, professors):
 
 def get_yesterday_professors(state_id, department_type):
     """Get professors from yesterday"""
-    session = Session()
+    session = SESSION()
     department = get_department(session, state_id, department_type)
     until_date = datetime.today().replace(hour=20, minute=0, second=0)
     from_date = until_date - timedelta(1)
