@@ -60,7 +60,10 @@ def get_yesterday_professors(state_id, department_type):
     """Get professors from yesterday"""
     session = SESSION()
     department = get_department(session, state_id, department_type)
-    until_date = datetime.today().replace(hour=20, minute=0, second=0)
+    until_date = datetime.today()
+    if until_date.hour < 19:
+        until_date = until_date - timedelta(1)
+    until_date = until_date.replace(hour=19, minute=0, second=0)
     from_date = until_date - timedelta(1)
     professors = session.query(DepartmentStat) \
         .filter(DepartmentStat.department_id == department.id) \
@@ -68,3 +71,23 @@ def get_yesterday_professors(state_id, department_type):
         .filter(DepartmentStat.date_time < until_date) \
         .all()
     return professors
+
+def get_amount_of_points(state_id, department_type, player_id):
+    """Get amount of points in department by player id"""
+    session = SESSION()
+    department = get_department(session, state_id, department_type)
+    until_date = datetime.today()
+    if until_date.hour < 19:
+        until_date = until_date - timedelta(1)
+    until_date = until_date.replace(hour=19, minute=0, second=0)
+    from_date = until_date - timedelta(14)
+    professors = session.query(DepartmentStat) \
+        .filter(DepartmentStat.department_id == department.id) \
+        .filter(DepartmentStat.player_id == player_id) \
+        .filter(DepartmentStat.date_time >= from_date) \
+        .filter(DepartmentStat.date_time < until_date) \
+        .all()
+    total_points = 0
+    for professor in professors:
+        total_points += professor.points
+    return total_points

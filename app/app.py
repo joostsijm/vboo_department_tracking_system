@@ -1,6 +1,8 @@
 """General functions module"""
 
+import random
 import math
+import re
 
 from app import LOGGER, database, api
 
@@ -69,3 +71,32 @@ def send_progress_message(state_id, department_type, language):
     ])
     print(message)
     api.send_message(language, message)
+
+def send_lotery_message(state_id, department_type, language, amount):
+    """Send lotery message"""
+    LOGGER.info('"%s": Send lotery message for "%s" department', state_id, department_type)
+    yesterday_professors = database.get_yesterday_professors(state_id, department_type)
+    professor_count = len(yesterday_professors)
+    random_index = random.randint(0, professor_count) - 1
+    winning_professor = yesterday_professors[random_index]
+    winner = winning_professor.player
+    winner_name = re.sub(r'\[.*]\s', '', winner.name)
+    amount_of_points = database.get_amount_of_points(state_id, department_type, winner.id)
+    LOGGER.info(
+        '"%s": candidates "%s", winner "%s" with "%s" points',
+        state_id, professor_count, winner_name, amount_of_points
+    )
+    msg_winner = "De department loterij is gewonnen door: {:}".format(
+        winner_name
+    )
+    msg_amount = "Met {:} punten heb je $ {:,.0f} gewonnen".format(
+        amount_of_points, amount_of_points * amount
+    ).replace(',', '.')
+    msg_end = "Stuur me een bericht om de prijs te ontvangen."
+    message = '. '.join([
+        msg_winner,
+        msg_amount,
+        msg_end
+    ])
+    print(message)
+    # api.send_message(language, message)

@@ -23,7 +23,7 @@ def add_update_department(state_id, department_type):
         args=[state_id, department_type],
         id='{}_{}'.format(state_id, department_type),
         replace_existing=True,
-        hour='20'
+        hour='19'
     )
 
 def add_send_progress_message(state_id, department_type, language):
@@ -32,16 +32,29 @@ def add_send_progress_message(state_id, department_type, language):
         jobs.send_progress_message,
         'cron',
         args=[state_id, department_type, language],
-        id='send_message_{}_{}'.format(state_id, department_type),
+        id='send_progress_message_{}_{}'.format(state_id, department_type),
         replace_existing=True,
-        hour='20',
+        hour='19',
         minute='10'
+    )
+
+def add_send_lotery_message(state_id, department_type, language, amount):
+    """Add send_message"""
+    SCHEDULER.add_job(
+        jobs.send_progress_message,
+        'cron',
+        args=[state_id, department_type, language, amount],
+        id='send_loter_message_{}_{}'.format(state_id, department_type),
+        replace_existing=True,
+        hour='8',
     )
 
 if __name__ == '__main__':
     # jobs
     # jobs.update_department(2788, 6)
     # jobs.send_progress_message(2788, 6, 'nl')
+    # jobs.send_lotery_message(2788, 6, 'nl', 1e9)
+    # sys.exit()
 
     # Jobs
     JOBS = job_storage.get_jobs()
@@ -57,11 +70,12 @@ if __name__ == '__main__':
             args=[job['state_id'], job['department_type']],
             id='{}_{}'.format(job['state_id'], job['department_type']),
             replace_existing=True,
-            hour='20'
+            hour='19'
         )
 
     # progress message VN uranium
     add_send_progress_message(2788, 6, 'nl')
+    add_send_lotery_message(2788, 6, 'nl', 10e6)
 
     try:
         while True:
