@@ -99,4 +99,4 @@ def send_lotery_message(state_id, department_type, language, amount):
         msg_end
     ])
     print(message)
-    # api.send_message(language, message)
+    api.send_message(language, message)

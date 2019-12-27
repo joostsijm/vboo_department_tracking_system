@@ -41,7 +41,7 @@ def add_send_progress_message(state_id, department_type, language):
 def add_send_lotery_message(state_id, department_type, language, amount):
     """Add send_message"""
     SCHEDULER.add_job(
-        jobs.send_progress_message,
+        jobs.send_lotery_message,
         'cron',
         args=[state_id, department_type, language, amount],
         id='send_loter_message_{}_{}'.format(state_id, department_type),
