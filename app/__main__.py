@@ -75,7 +75,7 @@ if __name__ == '__main__':
 
     # progress message VN uranium
     add_send_progress_message(2788, 6, 'nl')
-    add_send_lotery_message(2788, 6, 'nl', 10e6)
+    add_send_lotery_message(2788, 6, 'nl', 36e8)
 
     try:
         while True:
