@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta
 
 from app import SESSION
-from app.models import Player, Department, DepartmentStat
+from app.models import Player, Department, DepartmentStat, State
 
 
 def get_latest_professor(state_id, department_type):
@@ -34,7 +34,12 @@ def get_department(session, state_id, department_type):
     ).first()
     if department is None:
         department = Department()
-        department.state_id = state_id
+        state = session.query(State).get(state_id)
+        if not state:
+            state = State()
+            state.id = state_id
+            session.add(state)
+        department.state_id = state.id
         department.department_type = department_type
         session.add(department)
         session.commit()
