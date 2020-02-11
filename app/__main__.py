@@ -53,7 +53,7 @@ if __name__ == '__main__':
     # jobs
     # jobs.update_department(2788, 6)
     # jobs.send_progress_message(2788, 6, 'nl')
-    # jobs.send_lotery_message(2788, 6, 'nl', 1e9)
+    # jobs.send_lotery_message(2788, 6, 'nl', 32e8)
     # sys.exit()
 
     # Jobs

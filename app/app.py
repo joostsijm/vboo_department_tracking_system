@@ -4,7 +4,7 @@ import random
 import math
 import re
 
-from app import LOGGER, database, api
+from app import LOGGER, TELEGRAM_BOT, database, api
 
 
 def update_department(state_id, department_type):
@@ -86,17 +86,21 @@ def send_lotery_message(state_id, department_type, language, amount):
         '"%s": candidates "%s", winner "%s" with "%s" points',
         state_id, professor_count, winner_name, amount_of_points
     )
-    msg_winner = "De department loterij is gewonnen door: {:}".format(
-        winner_name
-    )
-    msg_amount = "Met {:} punten heb je $ {:,.0f} gewonnen".format(
-        amount_of_points, amount_of_points * amount
-    ).replace(',', '.')
-    msg_end = "Stuur me een bericht om de prijs te ontvangen."
-    message = '. '.join([
-        msg_winner,
-        msg_amount,
-        msg_end
+    tg_message = '. '.join([
+        "The daily department lotery is won by: {:}".format(winner_name),
+        "With {:} points you won $ {:,.0f}".format(
+            amount_of_points, amount_of_points * amount
+        ).replace(',', '.'),
+        "Send @bergjnl a message to receive your price.",
     ])
-    print(message)
-    api.send_message(language, message)
+    print(tg_message)
+    TELEGRAM_BOT.sendMessage(chat_id='@vn_lottery', text=tg_message)
+    rr_message = '. '.join([
+        "De department loterij is gewonnen door: {:}".format(winner_name),
+        "Met {:} punten heb je $ {:,.0f} gewonnen".format(
+            amount_of_points, amount_of_points * amount
+        ).replace(',', '.'),
+        "Stuur me een bericht om de prijs te ontvangen.",
+    ])
+    print(rr_message)
+    api.send_message(language, rr_message)
